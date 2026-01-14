@@ -10,7 +10,7 @@ st.sidebar.title("Select Tool")
 
 choice = st.sidebar.radio(
     "Go to:",
-    ["H2", "IGF", "ICP"]
+    ["H2", "IGF", "ICP", "PDP"]
 )
 
 if choice == "H2":
