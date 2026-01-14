@@ -5,5 +5,5 @@ def run_IGF():
     from io import StringIO
 
     st.set_page_config(layout="centered")
-    st.title("I (mA) vs Time (s) — Multi-File Plotter")
+    st.title("Inert Gas Fusion")
     print ("igf")
