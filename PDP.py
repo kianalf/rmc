@@ -6,7 +6,7 @@ def run_PDP():
     from io import StringIO
 
     st.set_page_config(layout="wide")
-    st.title("Multi-File Electrochemical Data Plotter")
+    st.title("Potentiodynamic Polarization")
 
     # ---------------------------
     # File uploader (MULTIPLE)

@@ -5,7 +5,7 @@ def run_H2():
     from io import StringIO
 
     st.set_page_config(layout="centered")
-    st.title("I (mA) vs Time (s) — Multi-File Plotter")
+    st.title("H2")
 
     # -----------------------------
     # Upload multiple files
@@ -26,7 +26,7 @@ def run_H2():
             text = uploaded_file.getvalue().decode("utf-8", errors="ignore")
             lines = text.splitlines()
 
-            # find header row (starts with 'mode')
+            # Find header row
             header_idx = None
             for i, line in enumerate(lines):
                 if line.lower().startswith("mode"):
@@ -47,7 +47,7 @@ def run_H2():
             all_curves.append({
                 "name": filename,
                 "x": df["time/s"],
-                "y": df["I/mA"]
+                "y": df["I/mA"],
             })
 
         if not all_curves:
@@ -55,16 +55,7 @@ def run_H2():
             st.stop()
 
         # -----------------------------
-        # Global bounds across all files
-        # -----------------------------
-        all_x = pd.concat([c["x"] for c in all_curves])
-        all_y = pd.concat([c["y"] for c in all_curves])
-
-        xmin, xmax = float(all_x.min()), float(all_x.max())
-        ymin, ymax = float(all_y.min()), float(all_y.max())
-
-        # -----------------------------
-        # Controls
+        # Sidebar controls
         # -----------------------------
         st.sidebar.header("Plot Controls")
 
@@ -74,6 +65,28 @@ def run_H2():
         )
 
         show_legend = st.sidebar.checkbox("Show legend", value=True)
+
+        # -----------------------------
+        # Color pickers (one per file)
+        # -----------------------------
+        st.sidebar.subheader("Curve Colors")
+
+        for curve in all_curves:
+            default_color = "#1f77b4"  # matplotlib default blue
+            curve["color"] = st.sidebar.color_picker(
+                f"{curve['name']}",
+                value=default_color,
+                key=f"color_{curve['name']}"
+            )
+
+        # -----------------------------
+        # Global bounds across all files
+        # -----------------------------
+        all_x = pd.concat([c["x"] for c in all_curves])
+        all_y = pd.concat([c["y"] for c in all_curves])
+
+        xmin, xmax = float(all_x.min()), float(all_x.max())
+        ymin, ymax = float(all_y.min()), float(all_y.max())
 
         x_bounds = st.sidebar.slider(
             "X bounds (time, s)",
@@ -94,9 +107,14 @@ def run_H2():
         # -----------------------------
         fig, ax = plt.subplots()
 
-        for c in all_curves:
-            label = c["name"] if show_legend else None
-            ax.plot(c["x"], c["y"], label=label)
+        for curve in all_curves:
+            label = curve["name"] if show_legend else None
+            ax.plot(
+                curve["x"],
+                curve["y"],
+                label=label,
+                color=curve["color"]
+            )
 
         ax.set_title(title)
         ax.set_xlabel("Time (s)")
