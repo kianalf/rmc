@@ -46,7 +46,7 @@ def run_H2():
 
             all_curves.append({
                 "name": filename,
-                "x": df["time/s"],
+                "x": df["time/s"] /60,
                 "y": df["I/mA"],
             })
 
