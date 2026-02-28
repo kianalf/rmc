@@ -61,7 +61,7 @@ def run_H2():
 
         title = st.sidebar.text_input(
             "Plot title",
-            value="I (mA) vs Time (s)"
+            value="I (mA) vs Time (min)"
         )
 
         show_legend = st.sidebar.checkbox("Show legend", value=True)
@@ -117,7 +117,7 @@ def run_H2():
             )
 
         ax.set_title(title)
-        ax.set_xlabel("Time (s)")
+        ax.set_xlabel("Time (min)")
         ax.set_ylabel("Current (mA)")
         ax.set_xlim(x_bounds)
         ax.set_ylim(y_bounds)
