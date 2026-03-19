@@ -2,6 +2,7 @@ def run_H2():
     import streamlit as st
     import pandas as pd
     import matplotlib.pyplot as plt
+    import os
     from io import StringIO
 
     st.set_page_config(layout="centered")
@@ -21,7 +22,7 @@ def run_H2():
         all_curves = []
 
         for uploaded_file in uploaded_files:
-            filename = uploaded_file.name
+            filename = os.path.splitext(uploaded_file.name)[0]
 
             text = uploaded_file.getvalue().decode("utf-8", errors="ignore")
             lines = text.splitlines()
@@ -46,7 +47,7 @@ def run_H2():
 
             all_curves.append({
                 "name": filename,
-                "x": df["time/s"] /60,
+                "x": df["time/s"],
                 "y": df["I/mA"],
             })
 
@@ -61,7 +62,7 @@ def run_H2():
 
         title = st.sidebar.text_input(
             "Plot title",
-            value="I (mA) vs Time (min)"
+            value="I (mA) vs Time (s)"
         )
 
         show_legend = st.sidebar.checkbox("Show legend", value=True)
@@ -117,7 +118,7 @@ def run_H2():
             )
 
         ax.set_title(title)
-        ax.set_xlabel("Time (min)")
+        ax.set_xlabel("Time (s)")
         ax.set_ylabel("Current (mA)")
         ax.set_xlim(x_bounds)
         ax.set_ylim(y_bounds)
