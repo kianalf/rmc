@@ -47,7 +47,7 @@ def run_H2():
 
             all_curves.append({
                 "name": filename,
-                "x": df["time/s"],
+                "x": df["time/s"]/60,
                 "y": df["I/mA"],
             })
 
@@ -118,7 +118,7 @@ def run_H2():
             )
 
         ax.set_title(title)
-        ax.set_xlabel("Time (s)")
+        ax.set_xlabel("Time (min)")
         ax.set_ylabel("Current (mA)")
         ax.set_xlim(x_bounds)
         ax.set_ylim(y_bounds)
