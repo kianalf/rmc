@@ -139,27 +139,32 @@ def run_QM():
         # Charge + M calculation
         # -----------------------------
         st.subheader("Integrated Charge and M Calculation")
-
+        
         F = 96485        # C/mol
         MW_H2 = 2.02     # g/mol
         n = 2            # electrons
-
+        
         for curve in all_curves:
             x = curve["x"].values
             y_mA = curve["y"].values
-
-            # Area under curve relative to y = 0
-            Q_mC = abs(np.trapezoid(y_mA, x))    # mA·s = mC (signed)
-            Q_C  = Q_mC * 0.001           # convert mC → C
-
-            # M calculation
-            M = ((Q_C * MW_H2)*1000) / (n * F)
-
+        
+            # Integrate current over time
+            Q_mC = abs(np.trapezoid(y_mA, x))  # mA·s = mC
+            Q_C = Q_mC * 0.001                 # mC → C
+        
+            # Hydrogen mass
+            M_mg = (Q_C * MW_H2 * 1000) / (n * F)  # mg H2
+        
+            # For a 1 g Cu sample
+            ppm_H2 = M_mg * 1000
+        
             st.write(
                 f"**{curve['name']}**  \n"
-                f"Q = {Q_C:.4f} mC  \n"
-                f"M = {M:.4f}"
+                f"Q = {Q_C:.4f} C  \n"
+                f"H₂ mass = {M_mg:.4f} mg  \n"
+                f"H₂ content = {ppm_H2:.2f} ppm"
             )
+
 
     else:
         st.info("Upload one or more files to plot.")
